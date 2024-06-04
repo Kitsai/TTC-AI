@@ -4,6 +4,7 @@ use crate::search_models::Agent;
 
 #[derive(Clone, Copy, Debug)]
 pub struct IllegalMoveError;
+pub struct DrawError;
 
 impl fmt::Display for IllegalMoveError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -68,10 +69,12 @@ impl TicTacToe {
         self.print_line(2);
     }
 
-    pub fn test_victory(&self) -> TicTacToeTypes {
+    pub fn test_victory(&self) -> Result<TicTacToeTypes, DrawError> {
 
         let mut total_d1: u8 = 3;
         let mut total_d2: u8 = 3;
+        let mut none_false: bool = false;
+
         for i in 0..3 {
             let mut total_l: u8 = 3;
             let mut total_c: u8 = 3;
@@ -81,11 +84,11 @@ impl TicTacToe {
             }
 
             if total_l != 0 {
-                return TicTacToeTypes::from_u8(total_l) ;
+                return Ok(TicTacToeTypes::from_u8(total_l)) ;
             }
 
             if total_c != 0 {
-                return TicTacToeTypes::from_u8(total_c);
+                return Ok(TicTacToeTypes::from_u8(total_c));
             }
 
             total_d1 &= self.board[i][i] as u8;
@@ -93,14 +96,18 @@ impl TicTacToe {
         }
 
         if total_d1 != 0 {
-            return TicTacToeTypes::from_u8(total_d1);
+            return Ok(TicTacToeTypes::from_u8(total_d1));
         }
 
         if total_d2 != 0 {
-            return TicTacToeTypes::from_u8(total_d2);
+            return Ok(TicTacToeTypes::from_u8(total_d2));
         }
 
-        TicTacToeTypes::None
+        if !none_false {
+            return Err(DrawError);
+        }
+
+        Ok(TicTacToeTypes::None)
     }
 
     pub fn play(&self, x: usize, y: usize, symbol: TicTacToeTypes) -> Result<TicTacToe, IllegalMoveError> {

@@ -3,7 +3,7 @@ mod search_models;
 
 use std::io;
 use search_models::Agent;
-use tic_tac_toe::{TicTacToe, TicTacToeTypes};
+use tic_tac_toe::{DrawError, TicTacToe, TicTacToeTypes};
 
 use crate::tic_tac_toe::IllegalMoveError;
 
@@ -67,12 +67,17 @@ pub fn run_2players() {
     let mut game = TicTacToe::new();
 
     let mut player: u8 = 0;
+    let mut draw: bool = false;
     'gameloop: loop {
         game.print_board();
         player_move(&mut game, player + 1);
         
         match game.test_victory() {
-            TicTacToeTypes::None => player = (player + 1)%2,
+            Err(DrawError) => {
+                draw = true;
+                break 'gameloop;
+            },
+            Ok(TicTacToeTypes::None) => player = (player + 1)%2,
             _  => break 'gameloop,
         }
 
@@ -81,12 +86,20 @@ pub fn run_2players() {
         player_move(&mut game, player + 1);
 
         match game.test_victory() {
-            TicTacToeTypes::None => player = (player + 1)%2,
+            Err(DrawError) => {
+                draw = true;
+                break 'gameloop;
+            }
+            Ok(TicTacToeTypes::None) => player = (player + 1)%2,
             _ => break 'gameloop
         }
     }
     println!();
-    println!("Player {} has won! Congratulations!", player+1);
+    if draw {
+        println!("There was a draw!");
+    } else {
+        println!("Player {} has won! Congratulations!", player + 1);
+    }
     println!();
 }
 
