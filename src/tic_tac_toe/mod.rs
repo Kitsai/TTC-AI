@@ -57,7 +57,7 @@ impl TicTacToe {
     }
 
     fn print_line(&self, idx: usize) {
-        println!("{}",self.board[idx][0].as_string() + " | " + &self.board[idx][1].as_string() + " | " + &self.board[idx][2].as_string());
+        println!(" {}",self.board[idx][0].as_string() + " | " + &self.board[idx][1].as_string() + " | " + &self.board[idx][2].as_string());
     }
 
     pub fn print_board(&self) {
@@ -104,12 +104,12 @@ impl TicTacToe {
     }
 
     pub fn play(&self, x: usize, y: usize, symbol: TicTacToeTypes) -> Result<TicTacToe, IllegalMoveError> {
-        if self.board[x][y] != TicTacToeTypes::None  || x > 2 || y > 2 {
+        if self.board[2-y][x] != TicTacToeTypes::None  || x > 2 || y > 2 {
             return Err(IllegalMoveError);
         }
 
         let mut t = self.clone();
-        t.board[x][y] = symbol;
+        t.board[2-y][x] = symbol;
         Ok(t)
     }
 

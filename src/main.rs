@@ -11,16 +11,20 @@ fn main() {
     'menuloop: loop {
         println!("Bem vindo decida o que quer fazer?");
         println!("1 - normal (2 jogadores)");
-        println!("2 - contra ia otima");
-        println!("3 - contra ia de chance");
-        println!("4 - contra ia com poda");
-        println!("5 - 2 ias");
-        println!("6 - exit");
+        println!("2 - contra ia otima %TODO%");
+        println!("3 - contra ia de chance %TODO%");
+        println!("4 - contra ia com poda %TODO%");
+        println!("5 - 2 ias %TODO%");
+        println!("6 - exit\n");
 
         let mut ans = String::new();
         io::stdin().read_line(&mut ans).expect("Erro ao ler linha.");
 
-
+        match ans.trim().parse() {
+            Ok(1) => run_2players(),
+            Ok(6) => break 'menuloop,
+            _ => {}
+        }
     }
 
 
@@ -36,7 +40,7 @@ fn read_play() -> (usize,usize) {
     let mut ans = String::new();
     io::stdin().read_line(&mut ans).expect("Deu ruim");
     let y: usize = ans.trim().parse().unwrap();
-    (x,y)
+    (x-1,y-1)
 }
 
 fn player_move(game : &mut TicTacToe, player: u8) {
@@ -52,7 +56,7 @@ fn player_move(game : &mut TicTacToe, player: u8) {
             Err(IllegalMoveError) => println!("Illegal move was made! Chose another point!\n"),
         }
     }
-    println!()   
+    println!();  
 }
 
 fn ai_move(game: &mut TicTacToe, symbol: TicTacToeTypes, agent: &dyn Agent) {
@@ -73,7 +77,7 @@ pub fn run_2players() {
         }
 
 
-
+        game.print_board();
         player_move(&mut game, player + 1);
 
         match game.test_victory() {
@@ -81,6 +85,9 @@ pub fn run_2players() {
             _ => break 'gameloop
         }
     }
+    println!();
+    println!("Player {} has won! Congratulations!", player+1);
+    println!();
 }
 
 pub fn run_1player(ia: &dyn Agent) {
