@@ -4,8 +4,7 @@ mod search_models;
 use std::io;
 use search_models::Agent;
 use tic_tac_toe::{DrawError, TicTacToe, TicTacToeTypes};
-
-use crate::tic_tac_toe::IllegalMoveError;
+use tic_tac_toe::IllegalMoveError;
 
 fn main() {
     'menuloop: loop {
